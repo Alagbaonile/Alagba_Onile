@@ -26,10 +26,13 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <section className="py-16 bg-muted/50">
+    <section className="py-20 bg-muted/50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">Why Choose Us</h2>
+        <div className="text-center mb-14">
+          <div className="inline-block px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
+            Why Students Choose Us
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">The Most Trusted SEVIS Payment Service</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             We make SEVIS fee payment stress-free with our secure, efficient service tailored for African students.
           </p>
@@ -37,11 +40,14 @@ export function WhyChooseUs() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="bg-card rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="mb-4">
+            <div 
+              key={index} 
+              className="bg-card rounded-lg p-8 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 border border-border"
+            >
+              <div className="rounded-full bg-primary/10 w-16 h-16 flex items-center justify-center mb-6">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
             </div>
           ))}
