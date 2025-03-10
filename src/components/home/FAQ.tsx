@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, CheckCircle } from "lucide-react";
 
 export function FAQ() {
   const faqs = [
@@ -36,32 +36,63 @@ export function FAQ() {
   ];
 
   return (
-    <section className="py-20 bg-muted/50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
-            <HelpCircle className="h-4 w-4" />
+    <section className="py-20 bg-muted/30 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.05]"></div>
+      <div className="absolute right-0 bottom-0 w-[500px] h-[500px] bg-primary/5 rounded-full -mr-64 blur-3xl"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary animate-fade-in">
+            <HelpCircle className="w-4 h-4" />
             <span>FAQ</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 animate-fade-in [animation-delay:200ms]">
+            Frequently Asked Questions
+          </h2>
+          
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in [animation-delay:400ms]">
             Find answers to common questions about SEVIS fee payments and our service.
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto bg-card rounded-xl shadow-sm border border-border p-6">
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border-b border-border last:border-0">
-                <AccordionTrigger className="text-left hover:no-underline py-4">
-                  <span className="font-medium text-lg">{faq.question}</span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-muted-foreground pb-2">{faq.answer}</p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+        <div className="max-w-3xl mx-auto relative">
+          <div className="absolute -inset-1.5 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl blur-xl opacity-70"></div>
+          <div className="bg-card rounded-xl shadow-lg border border-border p-6 md:p-8 relative animate-fade-in [animation-delay:600ms]">
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, index) => (
+                <AccordionItem 
+                  key={index} 
+                  value={`item-${index}`} 
+                  className="border-b border-border last:border-0 animate-fade-in"
+                  style={{ animationDelay: `${(index + 5) * 100}ms` }}
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-4 group">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
+                        <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                      </div>
+                      <span className="font-medium text-lg">{faq.question}</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="pl-9">
+                      <p className="text-muted-foreground pb-2">{faq.answer}</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+
+        <div className="mt-12 text-center animate-fade-in [animation-delay:1000ms]">
+          <p className="text-muted-foreground mb-4">Still have questions?</p>
+          <button className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 text-primary rounded-lg font-medium hover:bg-primary/20 transition-colors">
+            <HelpCircle className="w-4 h-4" />
+            Contact Support
+          </button>
         </div>
       </div>
     </section>
