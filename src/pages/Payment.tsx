@@ -2,64 +2,29 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Link } from "react-router-dom";
-import { Textarea } from "@/components/ui/textarea";
 import { 
-  CheckCircle2, 
   ChevronRight, 
   ChevronLeft, 
-  AlertCircle, 
   User, 
   GraduationCap, 
   Mail, 
   FileText,
-  CreditCard,
   Loader2,
-  CheckCircle
 } from "lucide-react";
-import { 
-  validateEmail, 
-  validateRequired, 
-  validateSevisId, 
-  validatePassportNumber,
-  validateSchoolCode,
-  validateProgramNumber
-} from "@/lib/validators";
 
-interface FormData {
-  // Personal Information
-  fullName: string;
-  dateOfBirth: string;
-  countryOfBirth: string;
-  citizenship: string;
-  
-  // Visa & School Information
-  sevisId: string;
-  visaType: string;
-  schoolCode: string;
-  programNumber: string;
-  
-  // Contact Information
-  email: string;
-  address: string;
-  
-  // Passport Information
-  passportRequired: boolean;
-  passportNumber: string;
-  
-  // Payment Information
-  amount: number;
-  paymentMethod: string;
-}
+// Import custom components
+import PersonalInfoStep from "@/components/payment/PersonalInfoStep";
+import VisaInfoStep from "@/components/payment/VisaInfoStep";
+import ContactInfoStep from "@/components/payment/ContactInfoStep";
+import PassportInfoStep from "@/components/payment/PassportInfoStep";
+import PaymentStepsProgress from "@/components/payment/PaymentStepsProgress";
 
-interface FieldError {
-  [key: string]: string;
-}
+// Import types and utils
+import { FormData, FieldError, StepConfig } from "@/components/payment/types";
+import { validateField, validateStep } from "@/components/payment/utils";
 
 const Payment = () => {
   const { toast } = useToast();
@@ -85,7 +50,7 @@ const Payment = () => {
   const [errors, setErrors] = useState<FieldError>({});
   const [fieldValidStatus, setFieldValidStatus] = useState<{[key: string]: boolean}>({});
 
-  const steps = [
+  const steps: StepConfig[] = [
     {
       title: "Personal Information",
       icon: <User className="h-5 w-5" />,
@@ -126,55 +91,8 @@ const Payment = () => {
     }
     
     // Validate field as user types (for immediate feedback)
-    validateField(name, value);
-  };
-
-  const validateField = (field: string, value: any) => {
-    let isValid = true;
-    
-    // Skip validation for passport number if passport is not required
-    if (field === "passportNumber" && !formData.passportRequired) {
-      setFieldValidStatus(prev => ({ ...prev, [field]: true }));
-      return true;
-    }
-    
-    // Skip validation for schoolCode if visa type is J1
-    if (field === "schoolCode" && formData.visaType === "j1") {
-      setFieldValidStatus(prev => ({ ...prev, [field]: true }));
-      return true;
-    }
-    
-    // Skip validation for programNumber if visa type is F1
-    if (field === "programNumber" && formData.visaType === "f1") {
-      setFieldValidStatus(prev => ({ ...prev, [field]: true }));
-      return true;
-    }
-
-    switch (field) {
-      case "email":
-        isValid = validateEmail(value);
-        break;
-      case "sevisId":
-        isValid = validateSevisId(value);
-        break;
-      case "passportNumber":
-        isValid = validatePassportNumber(value);
-        break;
-      case "schoolCode":
-        isValid = validateSchoolCode(value);
-        break;
-      case "programNumber":
-        isValid = validateProgramNumber(value);
-        break;
-      case "passportRequired":
-        isValid = true; // Checkbox is always valid
-        break;
-      default:
-        isValid = validateRequired(value);
-    }
-    
-    setFieldValidStatus(prev => ({ ...prev, [field]: isValid }));
-    return isValid;
+    const isValid = validateField(name, value, formData);
+    setFieldValidStatus(prev => ({ ...prev, [name]: isValid }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -190,113 +108,50 @@ const Payment = () => {
     }
     
     // Validate field
-    validateField(name, value);
+    const isValid = validateField(name, value, formData);
+    setFieldValidStatus(prev => ({ ...prev, [name]: isValid }));
     
     // For visa type, we need to reset and validate dependent fields
     if (name === "visaType") {
       if (value === "f1") {
-        validateField("schoolCode", formData.schoolCode);
-        setFieldValidStatus(prev => ({ ...prev, programNumber: true }));
+        const isSchoolCodeValid = validateField("schoolCode", formData.schoolCode, formData);
+        setFieldValidStatus(prev => ({ ...prev, schoolCode: isSchoolCodeValid, programNumber: true }));
       } else {
-        validateField("programNumber", formData.programNumber);
-        setFieldValidStatus(prev => ({ ...prev, schoolCode: true }));
+        const isProgramNumberValid = validateField("programNumber", formData.programNumber, formData);
+        setFieldValidStatus(prev => ({ ...prev, programNumber: isProgramNumberValid, schoolCode: true }));
       }
     }
   };
   
   const handleCheckboxChange = (name: string, checked: boolean) => {
     setFormData(prev => ({ ...prev, [name]: checked }));
-    validateField(name, checked);
+    
+    // Validate checkbox
+    const isValid = validateField(name, checked, formData);
+    setFieldValidStatus(prev => ({ ...prev, [name]: isValid }));
     
     // Reset passport number validation if not required
     if (name === "passportRequired") {
       if (!checked) {
         setFieldValidStatus(prev => ({ ...prev, passportNumber: true }));
       } else {
-        validateField("passportNumber", formData.passportNumber);
+        const isPassportValid = validateField("passportNumber", formData.passportNumber, formData);
+        setFieldValidStatus(prev => ({ ...prev, passportNumber: isPassportValid }));
       }
     }
   };
 
-  const validateStep = (stepIndex: number) => {
-    const stepFields = steps[stepIndex].fields;
-    const newErrors: FieldError = {};
-    let isValid = true;
-
-    stepFields.forEach(field => {
-      // Skip validation for passport number if passport is not required
-      if (field === "passportNumber" && !formData.passportRequired) {
-        return;
-      }
-      
-      // Skip validation for schoolCode if visa type is J1
-      if (field === "schoolCode" && formData.visaType === "j1") {
-        return;
-      }
-      
-      // Skip validation for programNumber if visa type is F1
-      if (field === "programNumber" && formData.visaType === "f1") {
-        return;
-      }
-
-      let fieldIsValid = true;
-      switch (field) {
-        case "email":
-          fieldIsValid = validateEmail(formData[field]);
-          if (!fieldIsValid) {
-            newErrors[field] = "Please enter a valid email address";
-            isValid = false;
-          }
-          break;
-        case "sevisId":
-          fieldIsValid = validateSevisId(formData[field]);
-          if (!fieldIsValid) {
-            newErrors[field] = "SEVIS ID should be in the format N12345678";
-            isValid = false;
-          }
-          break;
-        case "passportNumber":
-          fieldIsValid = validatePassportNumber(formData[field]);
-          if (!fieldIsValid) {
-            newErrors[field] = "Please enter a valid passport number (6-12 characters)";
-            isValid = false;
-          }
-          break;
-        case "schoolCode":
-          fieldIsValid = validateSchoolCode(formData[field]);
-          if (!fieldIsValid) {
-            newErrors[field] = "School code should be in the format ABC12345";
-            isValid = false;
-          }
-          break;
-        case "programNumber":
-          fieldIsValid = validateProgramNumber(formData[field]);
-          if (!fieldIsValid) {
-            newErrors[field] = "Program number should be in the format P-1-12345";
-            isValid = false;
-          }
-          break;
-        case "passportRequired":
-          // No validation needed for checkbox
-          fieldIsValid = true;
-          break;
-        default:
-          fieldIsValid = validateRequired(formData[field]);
-          if (!fieldIsValid) {
-            newErrors[field] = "This field is required";
-            isValid = false;
-          }
-      }
-      
-      setFieldValidStatus(prev => ({ ...prev, [field]: fieldIsValid }));
-    });
-
-    setErrors(newErrors);
-    return isValid;
+  const handleStepValidation = () => {
+    return validateStep(
+      steps[currentStep].fields, 
+      formData, 
+      setErrors,
+      setFieldValidStatus
+    );
   };
 
   const handleNext = () => {
-    if (validateStep(currentStep)) {
+    if (handleStepValidation()) {
       setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
       
       // Show success toast when advancing to the next step
@@ -321,7 +176,7 @@ const Payment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateStep(currentStep)) {
+    if (handleStepValidation()) {
       setIsSubmitting(true);
       
       // Simulate API call
@@ -338,288 +193,49 @@ const Payment = () => {
     }
   };
 
-  const renderFormFields = () => {
-    const currentFields = steps[currentStep].fields;
-    
-    return (
-      <div className="space-y-6">
-        {currentFields.includes("fullName") && (
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="flex items-center gap-1">
-              Full Name {errors.fullName && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.fullName && !errors.fullName && formData.fullName && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="fullName" 
-              name="fullName" 
-              placeholder="Enter your full name" 
-              value={formData.fullName}
-              onChange={handleChange}
-              className={`${errors.fullName ? "border-destructive" : ""} 
-                          ${fieldValidStatus.fullName && !errors.fullName && formData.fullName ? "border-green-500" : ""}`}
-            />
-            {errors.fullName && (
-              <p className="text-sm text-destructive">{errors.fullName}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("dateOfBirth") && (
-          <div className="space-y-2">
-            <Label htmlFor="dateOfBirth" className="flex items-center gap-1">
-              Date of Birth {errors.dateOfBirth && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.dateOfBirth && !errors.dateOfBirth && formData.dateOfBirth && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="dateOfBirth" 
-              name="dateOfBirth" 
-              type="date" 
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              className={`${errors.dateOfBirth ? "border-destructive" : ""} 
-                          ${fieldValidStatus.dateOfBirth && !errors.dateOfBirth && formData.dateOfBirth ? "border-green-500" : ""}`}
-            />
-            {errors.dateOfBirth && (
-              <p className="text-sm text-destructive">{errors.dateOfBirth}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("countryOfBirth") && (
-          <div className="space-y-2">
-            <Label htmlFor="countryOfBirth" className="flex items-center gap-1">
-              Country of Birth {errors.countryOfBirth && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.countryOfBirth && !errors.countryOfBirth && formData.countryOfBirth && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="countryOfBirth" 
-              name="countryOfBirth" 
-              placeholder="Enter your country of birth" 
-              value={formData.countryOfBirth}
-              onChange={handleChange}
-              className={`${errors.countryOfBirth ? "border-destructive" : ""} 
-                          ${fieldValidStatus.countryOfBirth && !errors.countryOfBirth && formData.countryOfBirth ? "border-green-500" : ""}`}
-            />
-            {errors.countryOfBirth && (
-              <p className="text-sm text-destructive">{errors.countryOfBirth}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("citizenship") && (
-          <div className="space-y-2">
-            <Label htmlFor="citizenship" className="flex items-center gap-1">
-              Citizenship {errors.citizenship && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.citizenship && !errors.citizenship && formData.citizenship && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="citizenship" 
-              name="citizenship" 
-              placeholder="Enter your citizenship" 
-              value={formData.citizenship}
-              onChange={handleChange}
-              className={`${errors.citizenship ? "border-destructive" : ""} 
-                          ${fieldValidStatus.citizenship && !errors.citizenship && formData.citizenship ? "border-green-500" : ""}`}
-            />
-            {errors.citizenship && (
-              <p className="text-sm text-destructive">{errors.citizenship}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("sevisId") && (
-          <div className="space-y-2">
-            <Label htmlFor="sevisId" className="flex items-center gap-1">
-              SEVIS ID {errors.sevisId && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.sevisId && !errors.sevisId && formData.sevisId && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="sevisId" 
-              name="sevisId" 
-              placeholder="N12345678" 
-              value={formData.sevisId}
-              onChange={handleChange}
-              className={`${errors.sevisId ? "border-destructive" : ""} 
-                          ${fieldValidStatus.sevisId && !errors.sevisId && formData.sevisId ? "border-green-500" : ""}`}
-            />
-            {errors.sevisId && (
-              <p className="text-sm text-destructive">{errors.sevisId}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("visaType") && (
-          <div className="space-y-2">
-            <Label htmlFor="visaType" className="flex items-center gap-1">
-              Visa Type
-              {fieldValidStatus.visaType && <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Select 
-              value={formData.visaType} 
-              onValueChange={(value) => handleSelectChange("visaType", value)}
-            >
-              <SelectTrigger className={fieldValidStatus.visaType ? "border-green-500" : ""}>
-                <SelectValue placeholder="Select visa type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="f1">F-1 Student Visa</SelectItem>
-                <SelectItem value="j1">J-1 Exchange Visitor</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-        
-        {currentFields.includes("schoolCode") && formData.visaType === "f1" && (
-          <div className="space-y-2">
-            <Label htmlFor="schoolCode" className="flex items-center gap-1">
-              School Code (F-1 only) {errors.schoolCode && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.schoolCode && !errors.schoolCode && formData.schoolCode && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="schoolCode" 
-              name="schoolCode" 
-              placeholder="ABC12345" 
-              value={formData.schoolCode}
-              onChange={handleChange}
-              className={`${errors.schoolCode ? "border-destructive" : ""} 
-                          ${fieldValidStatus.schoolCode && !errors.schoolCode && formData.schoolCode ? "border-green-500" : ""}`}
-            />
-            {errors.schoolCode && (
-              <p className="text-sm text-destructive">{errors.schoolCode}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("programNumber") && formData.visaType === "j1" && (
-          <div className="space-y-2">
-            <Label htmlFor="programNumber" className="flex items-center gap-1">
-              Program Number (J-1 only) {errors.programNumber && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.programNumber && !errors.programNumber && formData.programNumber && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="programNumber" 
-              name="programNumber" 
-              placeholder="P-1-12345" 
-              value={formData.programNumber}
-              onChange={handleChange}
-              className={`${errors.programNumber ? "border-destructive" : ""} 
-                          ${fieldValidStatus.programNumber && !errors.programNumber && formData.programNumber ? "border-green-500" : ""}`}
-            />
-            {errors.programNumber && (
-              <p className="text-sm text-destructive">{errors.programNumber}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("email") && (
-          <div className="space-y-2">
-            <Label htmlFor="email" className="flex items-center gap-1">
-              Email Address {errors.email && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.email && !errors.email && formData.email && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="email" 
-              name="email" 
-              type="email" 
-              placeholder="Enter your email" 
-              value={formData.email}
-              onChange={handleChange}
-              className={`${errors.email ? "border-destructive" : ""} 
-                          ${fieldValidStatus.email && !errors.email && formData.email ? "border-green-500" : ""}`}
-            />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email}</p>
-            )}
-          </div>
-        )}
-        
-        {currentFields.includes("address") && (
-          <div className="space-y-2">
-            <Label htmlFor="address" className="flex items-center gap-1">
-              Mailing Address (Optional)
-              {formData.address && <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Textarea 
-              id="address" 
-              name="address" 
-              placeholder="Enter your mailing address" 
-              value={formData.address}
-              onChange={handleChange}
-              rows={3}
-              className={formData.address ? "border-green-500" : ""}
-            />
-          </div>
-        )}
-        
-        {currentFields.includes("passportRequired") && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="passportRequired"
-                checked={formData.passportRequired}
-                onChange={(e) => handleCheckboxChange("passportRequired", e.target.checked)}
-                className="rounded border-input h-4 w-4"
-              />
-              <Label htmlFor="passportRequired" className="flex items-center gap-1">
-                I have a passport to provide
-                {fieldValidStatus.passportRequired && <CheckCircle className="h-4 w-4 text-green-500" />}
-              </Label>
-            </div>
-          </div>
-        )}
-        
-        {currentFields.includes("passportNumber") && formData.passportRequired && (
-          <div className="space-y-2">
-            <Label htmlFor="passportNumber" className="flex items-center gap-1">
-              Passport Number {errors.passportNumber && <AlertCircle className="h-4 w-4 text-destructive" />}
-              {fieldValidStatus.passportNumber && !errors.passportNumber && formData.passportNumber && 
-                <CheckCircle className="h-4 w-4 text-green-500" />}
-            </Label>
-            <Input 
-              id="passportNumber" 
-              name="passportNumber" 
-              placeholder="Enter your passport number" 
-              value={formData.passportNumber}
-              onChange={handleChange}
-              className={`${errors.passportNumber ? "border-destructive" : ""} 
-                          ${fieldValidStatus.passportNumber && !errors.passportNumber && formData.passportNumber ? "border-green-500" : ""}`}
-            />
-            {errors.passportNumber && (
-              <p className="text-sm text-destructive">{errors.passportNumber}</p>
-            )}
-          </div>
-        )}
-        
-        {currentStep === steps.length - 1 && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30 p-4 rounded-lg mt-6 shadow-sm">
-            <h3 className="font-medium mb-2 flex items-center gap-2">
-              <CreditCard className="h-4 w-4" /> Fee Breakdown
-            </h3>
-            <div className="flex justify-between mb-1">
-              <span>SEVIS Fee</span>
-              <span>$350.00</span>
-            </div>
-            <div className="flex justify-between mb-1">
-              <span>Processing Fee</span>
-              <span>$10.00</span>
-            </div>
-            <div className="border-t mt-2 pt-2 flex justify-between font-bold">
-              <span>Total</span>
-              <span>$360.00</span>
-            </div>
-          </div>
-        )}
-      </div>
-    );
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <PersonalInfoStep
+            formData={formData}
+            errors={errors}
+            fieldValidStatus={fieldValidStatus}
+            handleChange={handleChange}
+          />
+        );
+      case 1:
+        return (
+          <VisaInfoStep
+            formData={formData}
+            errors={errors}
+            fieldValidStatus={fieldValidStatus}
+            handleChange={handleChange}
+            handleSelectChange={handleSelectChange}
+          />
+        );
+      case 2:
+        return (
+          <ContactInfoStep
+            formData={formData}
+            errors={errors}
+            fieldValidStatus={fieldValidStatus}
+            handleChange={handleChange}
+          />
+        );
+      case 3:
+        return (
+          <PassportInfoStep
+            formData={formData}
+            errors={errors}
+            fieldValidStatus={fieldValidStatus}
+            handleChange={handleChange}
+            handleCheckboxChange={handleCheckboxChange}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -642,40 +258,7 @@ const Payment = () => {
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
           
           {/* Progress Indicator */}
-          <div className="mb-8">
-            <div className="flex justify-between">
-              {steps.map((step, index) => (
-                <div 
-                  key={index} 
-                  className={`flex flex-col items-center ${index <= currentStep ? 'text-primary' : 'text-muted-foreground'}`}
-                >
-                  <div 
-                    className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 transition-all duration-300 shadow-md ${
-                      index < currentStep 
-                        ? 'bg-primary text-primary-foreground animate-pulse' 
-                        : index === currentStep 
-                          ? 'border-2 border-primary bg-primary/10 animate-fade-in' 
-                          : 'border border-muted-foreground bg-muted'
-                    }`}
-                  >
-                    {index < currentStep ? (
-                      <CheckCircle2 className="h-5 w-5" />
-                    ) : (
-                      step.icon
-                    )}
-                  </div>
-                  <span className="text-xs text-center hidden md:block">{step.title}</span>
-                </div>
-              ))}
-            </div>
-            <div className="relative mt-2">
-              <div className="absolute h-1 bg-muted top-0 left-0 right-0 rounded"></div>
-              <div 
-                className="absolute h-1 bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 top-0 left-0 rounded transition-all duration-700 ease-in-out" 
-                style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+          <PaymentStepsProgress steps={steps} currentStep={currentStep} />
           
           <Card className="shadow-xl border-t-4 border-t-primary animate-fade-in dark:shadow-primary/5 overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-r ${steps[currentStep].bgColor} opacity-50 z-0`}></div>
@@ -689,7 +272,7 @@ const Payment = () => {
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent className="relative z-10">
-                {renderFormFields()}
+                {renderCurrentStep()}
               </CardContent>
               
               <CardFooter className="flex justify-between relative z-10">
