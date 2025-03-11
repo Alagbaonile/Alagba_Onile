@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, Shield, Globe, CreditCard, Clock, ArrowUpRight } from "lucide-react";
+import { ArrowRight, Shield, Globe, CreditCard, Clock, ArrowUpRight } from "lucide-react";
 
 export function HeroSection() {
   return (
@@ -59,16 +58,18 @@ export function HeroSection() {
           
           <div className="lg:col-span-5 flex justify-center lg:justify-end animate-fade-in [animation-delay:600ms]">
             <div className="relative w-full max-w-md">
-              {/* Decorative elements */}
-              <div className="absolute -left-10 top-32 w-20 h-20 rounded-full bg-blue-200 dark:bg-blue-900 blur-xl opacity-60 animate-pulse"></div>
-              <div className="absolute -right-12 top-10 w-24 h-24 rounded-full bg-violet-200 dark:bg-violet-900 blur-xl opacity-60 animate-pulse" style={{animationDelay: "1s"}}></div>
+              <div className="absolute -right-8 -top-16 w-[500px] h-[500px] opacity-10 dark:opacity-5">
+                <img 
+                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
+                  alt="Technology background" 
+                  className="w-full h-full object-cover rounded-full blur-sm"
+                />
+              </div>
               
-              {/* Payment card */}
               <div className="absolute -right-4 -top-4 -z-10 h-full w-full rounded-xl bg-gradient-to-r from-blue-500/20 via-violet-500/20 to-purple-500/20 blur-xl"></div>
               <div className="relative bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-900/90 dark:to-gray-900/70 backdrop-blur-md border border-blue-100/50 dark:border-blue-900/30 rounded-xl shadow-2xl overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-violet-500/5"></div>
                 
-                {/* Card shimmer effect */}
                 <div className="absolute inset-0 overflow-hidden">
                   <div className="absolute -inset-[10px] opacity-20 bg-gradient-to-r from-transparent via-white to-transparent skew-x-[-20deg] animate-shimmer"></div>
                 </div>
@@ -138,16 +139,15 @@ export function HeroSection() {
           </div>
         </div>
         
-        {/* Partners section */}
         <div className="mt-20 border-t border-blue-100 dark:border-blue-900/30 pt-10 animate-fade-in [animation-delay:1000ms]">
           <p className="text-center text-sm text-muted-foreground mb-6">Trusted Payment Partners</p>
-          <div className="flex flex-wrap justify-center gap-8 items-center opacity-70 hover:opacity-100 transition-opacity">
-            <img src="https://placehold.co/80x40?text=Visa" alt="Visa" className="h-8" />
-            <img src="https://placehold.co/80x40?text=MasterCard" alt="MasterCard" className="h-8" />
-            <img src="https://placehold.co/80x40?text=PayPal" alt="PayPal" className="h-8" />
-            <img src="https://placehold.co/80x40?text=Flutterwave" alt="Flutterwave" className="h-8" />
-            <img src="https://placehold.co/80x40?text=MTN" alt="MTN Money" className="h-8" />
-            <img src="https://placehold.co/80x40?text=Airtel" alt="Airtel Money" className="h-8" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center">
+            <img src="https://placehold.co/120x60?text=Visa" alt="Visa" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="https://placehold.co/120x60?text=MasterCard" alt="MasterCard" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="https://placehold.co/120x60?text=Flutterwave" alt="Flutterwave" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="https://placehold.co/120x60?text=PayPal" alt="PayPal" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="https://placehold.co/120x60?text=MTN" alt="MTN Money" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="https://placehold.co/120x60?text=Airtel" alt="Airtel Money" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
           </div>
         </div>
       </div>

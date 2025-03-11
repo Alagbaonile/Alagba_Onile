@@ -8,21 +8,21 @@ export function PaymentSteps() {
       icon: <CircleUser className="h-10 w-10 text-blue-600 dark:text-blue-400" />,
       title: "Fill Your Information",
       description: "Enter your personal details and SEVIS information in our secure form.",
-      image: "https://placehold.co/400x240?text=Form",
+      image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
       color: "from-blue-500 to-indigo-500"
     },
     {
       icon: <CreditCard className="h-10 w-10 text-violet-600 dark:text-violet-400" />,
       title: "Make Payment",
       description: "Choose your preferred payment method and securely process your payment.",
-      image: "https://placehold.co/400x240?text=Payment",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
       color: "from-violet-500 to-purple-500"
     },
     {
       icon: <CheckCircle className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />,
       title: "Get Confirmation",
       description: "Receive instant confirmation and your official SEVIS fee receipt via email.",
-      image: "https://placehold.co/400x240?text=Success",
+      image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
       color: "from-emerald-500 to-green-500"
     }
   ];
