@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -334,7 +333,7 @@ const Payment = () => {
                     onClick={handleNext}
                     className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 shadow-md hover:shadow-lg transition-all"
                   >
-                    Next
+                    {currentStep === 2 ? "Submit" : "Next"}
                     <ChevronRight className="h-4 w-4 ml-2" />
                   </Button>
                 ) : (
