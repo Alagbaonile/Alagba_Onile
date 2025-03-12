@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -25,9 +25,11 @@ import PaymentStepsProgress from "@/components/payment/PaymentStepsProgress";
 // Import types and utils
 import { FormData, FieldError, StepConfig } from "@/components/payment/types";
 import { validateField, validateStep } from "@/components/payment/utils";
+import { sendFormDataByEmail } from "@/services/emailService";
 
 const Payment = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -152,20 +154,57 @@ const Payment = () => {
 
   const handleNext = () => {
     if (handleStepValidation()) {
-      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
-      
-      // Show success toast when advancing to the next step
-      toast({
-        title: "Step completed!",
-        description: `Moving to ${steps[Math.min(currentStep + 1, steps.length - 1)].title}`,
-        variant: "default",
-      });
+      // If we're on the last step, submit form data to email service before proceeding to payment
+      if (currentStep === steps.length - 1) {
+        handleEmailSubmission();
+      } else {
+        setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+        
+        // Show success toast when advancing to the next step
+        toast({
+          title: "Step completed!",
+          description: `Moving to ${steps[Math.min(currentStep + 1, steps.length - 1)].title}`,
+          variant: "default",
+        });
+      }
     } else {
       toast({
         title: "Please fix the errors",
         description: "Please correct the highlighted fields before proceeding.",
         variant: "destructive"
       });
+    }
+  };
+
+  const handleEmailSubmission = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      const result = await sendFormDataByEmail(formData);
+      
+      if (result.success) {
+        toast({
+          title: "Form data sent successfully",
+          description: "Your information has been submitted. Proceeding to payment...",
+        });
+        
+        // Continue with payment process
+        handleSubmit(new Event('submit') as React.FormEvent);
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error("Email submission error:", error);
+      toast({
+        title: "Submission error",
+        description: error instanceof Error ? error.message : "Failed to submit your information. You can still proceed to payment.",
+        variant: "destructive"
+      });
+      
+      // Allow proceeding to payment even if email fails
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

@@ -1,10 +1,14 @@
+
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Globe, CreditCard, Clock, ArrowUpRight } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="relative py-32 px-4 overflow-hidden bg-gradient-to-b from-blue-50/50 via-indigo-50/30 to-background dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-background">
+    <section className="relative py-32 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2070')] bg-cover bg-center bg-no-repeat">
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background/70 dark:from-background/95 dark:via-background/90 dark:to-background/85"></div>
+      
       {/* Background elements */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.07]"></div>
       <div className="absolute -right-32 top-1/4 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
