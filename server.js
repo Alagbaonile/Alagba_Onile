@@ -12,6 +12,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Logging middleware to see all incoming requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
+
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -19,6 +25,15 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
+});
+
+// Test transporter connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('Nodemailer transporter error:', error);
+  } else {
+    console.log('Nodemailer server is ready to send messages');
+  }
 });
 
 // API Endpoint to receive form data & send email
@@ -67,7 +82,7 @@ app.post('/send-email', async (req, res) => {
         res.status(200).json({ message: 'Email sent successfully' });
     } catch (error) {
         console.error('Error sending email:', error);
-        res.status(500).json({ message: 'Failed to send email', error: error.message });
+        res.status(500).json({ message: 'Failed to send email', error: error.toString() });
     }
 });
 
@@ -78,4 +93,5 @@ app.get('/test', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Email settings: USER=${process.env.EMAIL_USER ? 'Set' : 'Not set'}, PASS=${process.env.EMAIL_PASS ? 'Set' : 'Not set'}`);
 });

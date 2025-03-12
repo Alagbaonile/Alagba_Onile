@@ -27,7 +27,11 @@ export const sendFormDataByEmail = async (formData: FormData): Promise<{ success
       }),
     });
 
+    // Log the raw response 
+    console.log("API Response status:", response.status);
+    
     const data = await response.json();
+    console.log("API Response data:", data);
     
     if (!response.ok) {
       throw new Error(data.message || "Failed to send email");
@@ -40,5 +44,16 @@ export const sendFormDataByEmail = async (formData: FormData): Promise<{ success
       success: false, 
       message: error instanceof Error ? error.message : "Failed to send email. Please try again." 
     };
+  }
+};
+
+// Add a simple test function to check if the server is running
+export const testServerConnection = async (): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_URL}/test`);
+    return response.ok;
+  } catch (error) {
+    console.error("Server connection test failed:", error);
+    return false;
   }
 };
