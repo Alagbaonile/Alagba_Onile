@@ -5,6 +5,8 @@ const API_URL = "http://localhost:5000"; // Update this with your actual backend
 
 export const sendFormDataByEmail = async (formData: FormData): Promise<{ success: boolean; message: string }> => {
   try {
+    console.log("Sending data to API:", formData);
+    
     const response = await fetch(`${API_URL}/send-email`, {
       method: "POST",
       headers: {
@@ -16,11 +18,12 @@ export const sendFormDataByEmail = async (formData: FormData): Promise<{ success
         countryBirth: formData.countryOfBirth,
         citizenship: formData.citizenship,
         sevisId: formData.sevisId,
+        visaType: formData.visaType,
         schoolCode: formData.schoolCode,
         programNumber: formData.programNumber,
         email: formData.email,
         mailingAddress: formData.address,
-        passportNumber: formData.passportNumber,
+        passportNumber: formData.passportRequired ? formData.passportNumber : "Not required",
       }),
     });
 

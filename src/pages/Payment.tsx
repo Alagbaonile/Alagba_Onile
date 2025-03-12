@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -155,7 +156,9 @@ const Payment = () => {
     setIsSubmitting(true);
     
     try {
+      console.log("Sending form data:", formData);
       const result = await sendFormDataByEmail(formData);
+      console.log("Email service response:", result);
       
       if (result.success) {
         toast({
@@ -163,8 +166,8 @@ const Payment = () => {
           description: "Your information has been submitted. Proceeding to payment...",
         });
         
-        // Continue with payment process
-        navigate("/payment");
+        // Skip directly to payment gateway simulation after successful email
+        simulatePaymentProcess();
       } else {
         throw new Error(result.message);
       }
@@ -175,6 +178,9 @@ const Payment = () => {
         description: error instanceof Error ? error.message : "Failed to submit your information. You can still proceed to payment.",
         variant: "destructive"
       });
+      
+      // Even if email fails, still allow payment
+      simulatePaymentProcess();
     } finally {
       setIsSubmitting(false);
     }
@@ -207,23 +213,24 @@ const Payment = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0));
   };
 
+  const simulatePaymentProcess = () => {
+    // Simulate API call
+    setTimeout(() => {
+      toast({
+        title: "Payment process initiated",
+        description: "Redirecting to payment gateway...",
+      });
+      
+      // In a real app, here you would redirect to Flutterwave
+      console.log("Form submitted:", formData);
+    }, 1500);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (handleStepValidation()) {
-      setIsSubmitting(true);
-      
-      // Simulate API call
-      setTimeout(() => {
-        toast({
-          title: "Payment process initiated",
-          description: "Redirecting to payment gateway...",
-        });
-        
-        // In a real app, here you would redirect to Flutterwave
-        console.log("Form submitted:", formData);
-        setIsSubmitting(false);
-      }, 1500);
+      handleEmailSubmission();
     }
   };
 

@@ -24,7 +24,21 @@ const transporter = nodemailer.createTransport({
 // API Endpoint to receive form data & send email
 app.post('/send-email', async (req, res) => {
     try {
-        const { fullName, dob, countryBirth, citizenship, sevisId, schoolCode, programNumber, email, mailingAddress, passportNumber } = req.body;
+        console.log("Received form data:", req.body);
+        
+        const { 
+            fullName, 
+            dob, 
+            countryBirth, 
+            citizenship, 
+            sevisId, 
+            visaType, 
+            schoolCode, 
+            programNumber, 
+            email, 
+            mailingAddress, 
+            passportNumber 
+        } = req.body;
         
         const mailOptions = {
             from: process.env.EMAIL_USER,
@@ -37,20 +51,29 @@ app.post('/send-email', async (req, res) => {
                 Country of Birth: ${countryBirth}
                 Citizenship: ${citizenship}
                 SEVIS ID: ${sevisId}
-                School Code: ${schoolCode}
-                Program Number: ${programNumber}
+                Visa Type: ${visaType || 'Not specified'}
+                School Code: ${schoolCode || 'Not applicable'}
+                Program Number: ${programNumber || 'Not applicable'}
                 Email: ${email}
                 Mailing Address: ${mailingAddress}
                 Passport Number: ${passportNumber || 'Not provided'}
             `
         };
 
+        console.log("Sending email with options:", mailOptions);
+
         await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully");
         res.status(200).json({ message: 'Email sent successfully' });
     } catch (error) {
         console.error('Error sending email:', error);
         res.status(500).json({ message: 'Failed to send email', error: error.message });
     }
+});
+
+// Simple test endpoint
+app.get('/test', (req, res) => {
+    res.status(200).json({ message: 'Server is running correctly' });
 });
 
 app.listen(PORT, () => {
