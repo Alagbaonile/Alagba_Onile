@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -152,30 +151,6 @@ const Payment = () => {
     );
   };
 
-  const handleNext = () => {
-    if (handleStepValidation()) {
-      // If we're on the last step, submit form data to email service before proceeding to payment
-      if (currentStep === steps.length - 1) {
-        handleEmailSubmission();
-      } else {
-        setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
-        
-        // Show success toast when advancing to the next step
-        toast({
-          title: "Step completed!",
-          description: `Moving to ${steps[Math.min(currentStep + 1, steps.length - 1)].title}`,
-          variant: "default",
-        });
-      }
-    } else {
-      toast({
-        title: "Please fix the errors",
-        description: "Please correct the highlighted fields before proceeding.",
-        variant: "destructive"
-      });
-    }
-  };
-
   const handleEmailSubmission = async () => {
     setIsSubmitting(true);
     
@@ -189,7 +164,7 @@ const Payment = () => {
         });
         
         // Continue with payment process
-        handleSubmit(new Event('submit') as React.FormEvent);
+        navigate("/payment");
       } else {
         throw new Error(result.message);
       }
@@ -200,11 +175,31 @@ const Payment = () => {
         description: error instanceof Error ? error.message : "Failed to submit your information. You can still proceed to payment.",
         variant: "destructive"
       });
-      
-      // Allow proceeding to payment even if email fails
-      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (handleStepValidation()) {
+      // If we're on the last step, submit form data to email service before proceeding to payment
+      if (currentStep === steps.length - 1) {
+        handleEmailSubmission();
+      } else {
+        setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+        
+        toast({
+          title: "Step completed!",
+          description: `Moving to ${steps[Math.min(currentStep + 1, steps.length - 1)].title}`,
+          variant: "default",
+        });
+      }
+    } else {
+      toast({
+        title: "Please fix the errors",
+        description: "Please correct the highlighted fields before proceeding.",
+        variant: "destructive"
+      });
     }
   };
 
