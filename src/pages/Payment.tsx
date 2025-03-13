@@ -430,12 +430,14 @@ const Payment = () => {
       <main className="flex-grow container mx-auto px-4 py-12 relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="mb-6">
-            <button 
+            <Button 
               onClick={() => navigate("/pricing")}
               className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
+              variant="ghost"
+              size="sm"
             >
               <ArrowLeft className="h-4 w-4 mr-1" /> Back to Pricing
-            </button>
+            </Button>
             
             <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
             
