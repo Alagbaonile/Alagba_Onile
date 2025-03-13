@@ -66,7 +66,7 @@ export function Navbar() {
             to="/" 
             className="font-display text-2xl font-bold transition-transform hover:scale-105"
           >
-            SevPay
+            VisaPay
           </Link>
           
           {/* Desktop Navigation */}
