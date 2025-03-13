@@ -4,8 +4,15 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Globe, CreditCard, Clock, ArrowUpRight } from "lucide-react";
 
 export function HeroSection() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className="relative py-32 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2070')] bg-cover bg-center bg-no-repeat">
+    <section className="relative py-32 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070')] bg-cover bg-center bg-no-repeat">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background/70 dark:from-background/95 dark:via-background/90 dark:to-background/85"></div>
       
@@ -39,7 +46,12 @@ export function HeroSection() {
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="border-2 hover:bg-primary/5 shadow-md backdrop-blur-sm group">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-2 hover:bg-primary/5 shadow-md backdrop-blur-sm group"
+                onClick={() => scrollToSection('how-it-works')}
+              >
                 <span>How It Works</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </Button>
@@ -64,7 +76,7 @@ export function HeroSection() {
             <div className="relative w-full max-w-md">
               <div className="absolute -right-8 -top-16 w-[500px] h-[500px] opacity-10 dark:opacity-5">
                 <img 
-                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
+                  src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" 
                   alt="Technology background" 
                   className="w-full h-full object-cover rounded-full blur-sm"
                 />
@@ -101,7 +113,7 @@ export function HeroSection() {
                       />
                       <div>
                         <p className="text-sm text-muted-foreground">Student Name</p>
-                        <p className="font-medium">John Doe</p>
+                        <p className="font-medium">Wanjiku Kamau</p>
                       </div>
                     </div>
                     
@@ -143,15 +155,12 @@ export function HeroSection() {
           </div>
         </div>
         
-        <div className="mt-20 border-t border-blue-100 dark:border-blue-900/30 pt-10 animate-fade-in [animation-delay:1000ms]">
+        <div id="payment-partners" className="mt-20 border-t border-blue-100 dark:border-blue-900/30 pt-10 animate-fade-in [animation-delay:1000ms]">
           <p className="text-center text-sm text-muted-foreground mb-6">Trusted Payment Partners</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 items-center justify-items-center">
             <img src="https://placehold.co/120x60?text=Visa" alt="Visa" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
             <img src="https://placehold.co/120x60?text=MasterCard" alt="MasterCard" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
             <img src="https://placehold.co/120x60?text=Flutterwave" alt="Flutterwave" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
-            <img src="https://placehold.co/120x60?text=PayPal" alt="PayPal" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
-            <img src="https://placehold.co/120x60?text=MTN" alt="MTN Money" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
-            <img src="https://placehold.co/120x60?text=Airtel" alt="Airtel Money" className="h-12 opacity-70 hover:opacity-100 transition-opacity" />
           </div>
         </div>
       </div>

@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Navbar } from "@/components/layout/Navbar";
 import { HeroSection } from "@/components/home/HeroSection";
+import { HowItWorks } from "@/components/home/HowItWorks";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { PaymentSteps } from "@/components/home/PaymentSteps";
 import { FAQ } from "@/components/home/FAQ";
@@ -11,18 +12,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowUp } from "lucide-react";
 
 const Index = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Handle scroll events
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-
       if (window.scrollY > 500) {
         setShowScrollTop(true);
       } else {
@@ -41,31 +35,23 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <header 
-        className={`border-b z-50 bg-background/95 backdrop-blur-md transition-all duration-300 ${
-          scrolled ? "sticky top-0 shadow-sm" : ""
-        }`}
-      >
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="font-semibold text-xl text-primary flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">S</div>
-            SEVIS Pay Africa
-          </Link>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link to="/payment">
-              <Button className="bg-[#FFD700] text-[#003366] hover:bg-[#FFD700]/90">Make Payment</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="flex-grow">
         <HeroSection />
-        <WhyChooseUs />
-        <PaymentSteps />
-        <FAQ />
-        <ContactSupport />
+        <HowItWorks />
+        <div id="services">
+          <WhyChooseUs />
+        </div>
+        <div id="about">
+          <PaymentSteps />
+        </div>
+        <div id="faq">
+          <FAQ />
+        </div>
+        <div id="contact-support">
+          <ContactSupport />
+        </div>
       </main>
       
       <footer className="border-t py-12 bg-muted/40 relative overflow-hidden">

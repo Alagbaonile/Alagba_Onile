@@ -4,8 +4,17 @@ import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Bell, User } from "lucide-react";
+import { Menu, X, Bell, User, ChevronDown } from "lucide-react";
 import { useLatestNews } from "@/hooks/useNewsData";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,6 +43,14 @@ export function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   return (
     <header 
       className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -49,17 +66,75 @@ export function Navbar() {
             to="/" 
             className="font-display text-2xl font-bold transition-transform hover:scale-105"
           >
-            NewsHub
+            SevPay
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
-            <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors">Home</Link>
-            <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors">Politics</Link>
-            <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors">Business</Link>
-            <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors">Technology</Link>
-            <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors">Entertainment</Link>
-            <Link to="/" className="text-sm font-medium hover:text-primary/80 transition-colors">Sports</Link>
+          <nav className="hidden lg:flex items-center space-x-4">
+            <Link 
+              to="/" 
+              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+            >
+              Home
+            </Link>
+            <button 
+              onClick={() => scrollToSection('services')}
+              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+            >
+              Services
+            </button>
+            <Link 
+              to="/blog" 
+              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+            >
+              Blog
+            </Link>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-sm font-medium hover:text-primary/80 transition-colors bg-transparent">
+                    Company
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-2 p-4">
+                      <li>
+                        <button
+                          onClick={() => scrollToSection('about')}
+                          className="block w-full select-none space-y-1 rounded-md p-3 hover:bg-accent text-left"
+                        >
+                          <div className="text-sm font-medium">About Us</div>
+                          <p className="line-clamp-2 text-sm text-muted-foreground">
+                            Learn more about our mission
+                          </p>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => scrollToSection('faq')}
+                          className="block w-full select-none space-y-1 rounded-md p-3 hover:bg-accent text-left"
+                        >
+                          <div className="text-sm font-medium">FAQ</div>
+                          <p className="line-clamp-2 text-sm text-muted-foreground">
+                            Frequently asked questions
+                          </p>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => scrollToSection('contact-support')}
+                          className="block w-full select-none space-y-1 rounded-md p-3 hover:bg-accent text-left"
+                        >
+                          <div className="text-sm font-medium">Support</div>
+                          <p className="line-clamp-2 text-sm text-muted-foreground">
+                            Get help with your payments
+                          </p>
+                        </button>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </nav>
           
           {/* Actions */}
@@ -104,50 +179,53 @@ export function Navbar() {
               >
                 Home
               </Link>
+              <button 
+                onClick={() => scrollToSection('services')}
+                className="block px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left"
+              >
+                Services
+              </button>
               <Link 
-                to="/" 
+                to="/blog" 
                 className="block px-3 py-2 rounded-md hover:bg-accent transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Politics
+                Blog
               </Link>
-              <Link 
-                to="/" 
-                className="block px-3 py-2 rounded-md hover:bg-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Business
-              </Link>
-              <Link 
-                to="/" 
-                className="block px-3 py-2 rounded-md hover:bg-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Technology
-              </Link>
-              <Link 
-                to="/" 
-                className="block px-3 py-2 rounded-md hover:bg-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Entertainment
-              </Link>
-              <Link 
-                to="/" 
-                className="block px-3 py-2 rounded-md hover:bg-accent transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Sports
-              </Link>
+              <div className="px-3 py-2">
+                <div className="font-medium mb-2">Company</div>
+                <div className="space-y-2 pl-4">
+                  <button 
+                    onClick={() => scrollToSection('about')}
+                    className="block px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left"
+                  >
+                    About Us
+                  </button>
+                  <button 
+                    onClick={() => scrollToSection('faq')}
+                    className="block px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left"
+                  >
+                    FAQ
+                  </button>
+                  <button 
+                    onClick={() => scrollToSection('contact-support')}
+                    className="block px-3 py-2 rounded-md hover:bg-accent transition-colors w-full text-left"
+                  >
+                    Support
+                  </button>
+                </div>
+              </div>
             </nav>
             <div className="mt-4 pt-4 border-t border-border flex space-x-4">
               <Button variant="outline" size="sm" className="flex-1">
                 <User className="h-4 w-4 mr-2" />
                 Sign In
               </Button>
-              <Button variant="default" size="sm" className="flex-1">
-                Subscribe
-              </Button>
+              <Link to="/payment" className="flex-1">
+                <Button variant="default" size="sm" className="w-full">
+                  Make Payment
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
