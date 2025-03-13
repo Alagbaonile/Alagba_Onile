@@ -1,9 +1,11 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -12,6 +14,8 @@ import {
   Mail, 
   FileText,
   Loader2,
+  ArrowLeft,
+  DollarSign,
 } from "lucide-react";
 
 // Import custom components
@@ -26,30 +30,155 @@ import { FormData, FieldError, StepConfig } from "@/components/payment/types";
 import { validateField, validateStep } from "@/components/payment/utils";
 import { sendFormDataByEmail } from "@/services/emailService";
 
+// Pricing plan types
+interface PricingPlan {
+  id: string;
+  name: string;
+  processingTime: string;
+  sevisFee: number;
+  serviceFee: number;
+  totalAmount: number;
+  visaType: "f1" | "j1";
+}
+
 const Payment = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Get selected plan from location state or localStorage
+  const locationState = location.state as { planId?: string; visaType?: "f1" | "j1" } | null;
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
+
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     dateOfBirth: "",
     countryOfBirth: "",
     citizenship: "",
     sevisId: "",
-    visaType: "f1",
+    visaType: locationState?.visaType || "f1",
     schoolCode: "",
     programNumber: "",
     email: "",
     address: "",
     passportRequired: false,
     passportNumber: "",
-    amount: 350,
+    amount: 350, // Default amount, will be updated based on selected plan
     paymentMethod: "card"
   });
   
   const [errors, setErrors] = useState<FieldError>({});
   const [fieldValidStatus, setFieldValidStatus] = useState<{[key: string]: boolean}>({});
+
+  // All available pricing plans
+  const pricingPlans: PricingPlan[] = [
+    // F1 Visa Plans
+    {
+      id: "express-f1",
+      name: "Express",
+      processingTime: "24 hours",
+      sevisFee: 350,
+      serviceFee: 100,
+      totalAmount: 450,
+      visaType: "f1"
+    },
+    {
+      id: "standard-f1",
+      name: "Standard",
+      processingTime: "3-5 days",
+      sevisFee: 350,
+      serviceFee: 70,
+      totalAmount: 420,
+      visaType: "f1"
+    },
+    {
+      id: "basic-f1",
+      name: "Basic",
+      processingTime: "7-10 days",
+      sevisFee: 350,
+      serviceFee: 40,
+      totalAmount: 390,
+      visaType: "f1"
+    },
+    {
+      id: "free-f1",
+      name: "Economy",
+      processingTime: "21-30 days",
+      sevisFee: 350,
+      serviceFee: 10,
+      totalAmount: 360,
+      visaType: "f1"
+    },
+    // J1 Visa Plans
+    {
+      id: "express-j1",
+      name: "Express",
+      processingTime: "24 hours",
+      sevisFee: 220,
+      serviceFee: 90,
+      totalAmount: 310,
+      visaType: "j1"
+    },
+    {
+      id: "standard-j1",
+      name: "Standard",
+      processingTime: "3-5 days",
+      sevisFee: 220,
+      serviceFee: 60,
+      totalAmount: 280,
+      visaType: "j1"
+    },
+    {
+      id: "basic-j1",
+      name: "Basic",
+      processingTime: "7-10 days",
+      sevisFee: 220,
+      serviceFee: 30,
+      totalAmount: 250,
+      visaType: "j1"
+    },
+    {
+      id: "free-j1",
+      name: "Economy",
+      processingTime: "21-30 days",
+      sevisFee: 220,
+      serviceFee: 10,
+      totalAmount: 230,
+      visaType: "j1"
+    }
+  ];
+
+  useEffect(() => {
+    // Get selected plan from location state or localStorage
+    const planId = locationState?.planId || localStorage.getItem("selectedPlan");
+    
+    if (planId) {
+      const plan = pricingPlans.find(p => p.id === planId);
+      if (plan) {
+        setSelectedPlan(plan);
+        
+        // Update form data with plan details
+        setFormData(prev => ({
+          ...prev,
+          visaType: plan.visaType,
+          amount: plan.totalAmount
+        }));
+      } else {
+        // If no valid plan found, redirect to pricing page
+        toast({
+          title: "No plan selected",
+          description: "Please select a payment plan to continue",
+          variant: "destructive"
+        });
+        navigate("/pricing");
+      }
+    } else {
+      // If no plan selected, redirect to pricing page
+      navigate("/pricing");
+    }
+  }, [location, navigate, toast, locationState]);
 
   const steps: StepConfig[] = [
     {
@@ -288,6 +417,12 @@ const Payment = () => {
             <GraduationCap className="h-5 w-5" /> SEVIS Pay Africa
           </Link>
           <div className="flex items-center gap-4">
+            <Link to="/" className="text-sm font-medium hover:text-primary">
+              Home
+            </Link>
+            <Link to="/pricing" className="text-sm font-medium hover:text-primary">
+              Pricing
+            </Link>
             <ThemeToggle />
           </div>
         </div>
@@ -295,7 +430,35 @@ const Payment = () => {
 
       <main className="flex-grow container mx-auto px-4 py-12 relative z-10">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
+          <div className="mb-6">
+            <Link to="/pricing" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-4">
+              <ArrowLeft className="h-4 w-4 mr-1" /> Back to Pricing
+            </Link>
+            
+            <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
+            
+            {selectedPlan && (
+              <Card className="mb-8 overflow-hidden">
+                <div className={`bg-gradient-to-r ${formData.visaType === "f1" ? "from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30" : "from-purple-50 to-fuchsia-50 dark:from-purple-950/40 dark:to-fuchsia-950/30"} p-4`}>
+                  <h2 className="text-lg font-semibold mb-1">Selected Plan: {selectedPlan.name}</h2>
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    <div className="flex items-center gap-1">
+                      <DollarSign className="h-4 w-4" />
+                      <span>Total: ${selectedPlan.totalAmount}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <FileText className="h-4 w-4" />
+                      <span>SEVIS Fee: ${selectedPlan.sevisFee}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <GraduationCap className="h-4 w-4" />
+                      <span>Visa Type: {formData.visaType.toUpperCase()}</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
           
           {/* Progress Indicator */}
           <PaymentStepsProgress steps={steps} currentStep={currentStep} />
