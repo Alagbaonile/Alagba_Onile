@@ -1,8 +1,7 @@
-
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import Footer from "@/components/layout/Footer";
 import { LiveNewsTicker } from "@/components/ui/LiveNewsTicker";
 import { NewsCard } from "@/components/news/NewsCard";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,6 @@ const ArticlePage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: newsData, isLoading } = useLatestNews();
   
-  // Scroll to top when page loads
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -49,7 +47,6 @@ const ArticlePage = () => {
     );
   }
   
-  // Find the article with the matching ID
   const article = newsData?.articles.find(article => article.id === id);
   
   if (!article) {
@@ -71,7 +68,6 @@ const ArticlePage = () => {
     );
   }
   
-  // Get related articles (excluding the current one)
   const relatedArticles = newsData?.articles
     .filter(a => a.category === article.category && a.id !== article.id)
     .slice(0, 3) || [];
