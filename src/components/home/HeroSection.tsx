@@ -12,10 +12,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative py-32 px-4 overflow-hidden">
-      {/* Updated background image with better fit */}
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523374228107-6e44bd2b524e?q=80&w=2070')] bg-cover bg-center bg-no-repeat"></div>
-      
+    <section className="relative py-32 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070')] bg-cover bg-center bg-no-repeat">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background/70 dark:from-background/95 dark:via-background/90 dark:to-background/85"></div>
       

@@ -99,8 +99,8 @@ export function ContactSupport() {
                 <Mail className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <h4 className="font-medium">Email Us</h4>
-                  <p className="text-sm text-muted-foreground">support@visapayafrica.com</p>
-                  <p className="text-sm text-muted-foreground">info@visapayafrica.com</p>
+                  <p className="text-sm text-muted-foreground">support@sevispayafrica.com</p>
+                  <p className="text-sm text-muted-foreground">info@sevispayafrica.com</p>
                 </div>
               </div>
               
@@ -108,7 +108,7 @@ export function ContactSupport() {
                 <Phone className="h-5 w-5 text-primary mt-0.5" />
                 <div>
                   <h4 className="font-medium">Call Us</h4>
-                  <p className="text-sm text-muted-foreground">+234 (0) 800 VISA PAY</p>
+                  <p className="text-sm text-muted-foreground">+234 (0) 800 SEVIS PAY</p>
                   <p className="text-sm text-muted-foreground">+1 (234) 567-8901</p>
                 </div>
               </div>
