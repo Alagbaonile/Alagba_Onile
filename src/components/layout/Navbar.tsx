@@ -63,8 +63,8 @@ export function Navbar() {
           : "bg-background"
       }`}
     >
-      <div className="container mx-auto px-6 md:px-10"> {/* Increased container padding */}
-        <div className="flex items-center justify-between h-18 md:h-22"> {/* Increased height */}
+      <div className="container mx-auto px-6 md:px-10">
+        <div className="flex items-center justify-between h-18 md:h-22">
           {/* Logo */}
           <Link 
             to="/" 
@@ -77,7 +77,7 @@ export function Navbar() {
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8"> {/* Increased spacing */}
+          <nav className="hidden lg:flex items-center space-x-8">
             <Link 
               to="/" 
               className="text-base font-medium hover:text-primary/80 transition-colors px-4 py-2"
@@ -150,7 +150,7 @@ export function Navbar() {
           </nav>
           
           {/* Actions */}
-          <div className="flex items-center space-x-5"> {/* Increased spacing */}
+          <div className="flex items-center space-x-5">
             <ThemeToggle />
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Bell className="h-5 w-5" />
@@ -161,7 +161,7 @@ export function Navbar() {
               <span className="sr-only">Account</span>
             </Button>
             <Link to="/payment" className="hidden md:block">
-              <Button variant="default" size="sm" className="py-5 px-6 text-base"> {/* Larger button */}
+              <Button variant="default" size="sm" className="py-5 px-6 text-base">
                 Make Payment
               </Button>
             </Link>
@@ -181,11 +181,11 @@ export function Navbar() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-background border-t border-border animate-fade-in">
-          <div className="container mx-auto px-6 py-6"> {/* Increased padding */}
-            <nav className="space-y-4"> {/* Increased spacing */}
+          <div className="container mx-auto px-6 py-6">
+            <nav className="space-y-4">
               <Link 
                 to="/" 
-                className="block px-4 py-3 rounded-md hover:bg-accent transition-colors text-base" {/* Increased text size and padding */}
+                className="block px-4 py-3 rounded-md hover:bg-accent transition-colors text-base"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
@@ -194,7 +194,7 @@ export function Navbar() {
               {isPaymentPage ? (
                 <Link 
                   to="/pricing" 
-                  className="block px-4 py-3 rounded-md hover:bg-accent transition-colors text-base" {/* Increased text size and padding */}
+                  className="block px-4 py-3 rounded-md hover:bg-accent transition-colors text-base"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Back to Pricing
@@ -203,28 +203,28 @@ export function Navbar() {
                 <>
                   <button 
                     onClick={() => scrollToSection('services')}
-                    className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base" {/* Increased text size and padding */}
+                    className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base"
                   >
                     Services
                   </button>
                   <div className="px-4 py-3">
-                    <div className="font-medium mb-3 text-base">Company</div> {/* Increased text size and margin */}
-                    <div className="space-y-3 pl-5"> {/* Increased spacing */}
+                    <div className="font-medium mb-3 text-base">Company</div>
+                    <div className="space-y-3 pl-5">
                       <button 
                         onClick={() => scrollToSection('about')}
-                        className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base" {/* Increased text size and padding */}
+                        className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base"
                       >
                         About Us
                       </button>
                       <button 
                         onClick={() => scrollToSection('faq')}
-                        className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base" {/* Increased text size and padding */}
+                        className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base"
                       >
                         FAQ
                       </button>
                       <button 
                         onClick={() => scrollToSection('contact-support')}
-                        className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base" {/* Increased text size and padding */}
+                        className="block px-4 py-3 rounded-md hover:bg-accent transition-colors w-full text-left text-base"
                       >
                         Support
                       </button>
@@ -233,13 +233,13 @@ export function Navbar() {
                 </>
               )}
             </nav>
-            <div className="mt-6 pt-5 border-t border-border flex space-x-4"> {/* Increased spacing */}
-              <Button variant="outline" size="sm" className="flex-1 py-5 text-base"> {/* Larger button */}
+            <div className="mt-6 pt-5 border-t border-border flex space-x-4">
+              <Button variant="outline" size="sm" className="flex-1 py-5 text-base">
                 <User className="h-4 w-4 mr-2" />
                 Sign In
               </Button>
               <Link to="/payment" className="flex-1">
-                <Button variant="default" size="sm" className="w-full py-5 text-base"> {/* Larger button */}
+                <Button variant="default" size="sm" className="w-full py-5 text-base">
                   Make Payment
                 </Button>
               </Link>
