@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Bell, User, ChevronDown } from "lucide-react";
+import { Menu, X, Bell, User } from "lucide-react";
 import { useLatestNews } from "@/hooks/useNewsData";
 import {
   NavigationMenu,
@@ -14,7 +14,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
