@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,9 +13,9 @@ import {
   Mail, 
   FileText,
   Loader2,
-  ArrowLeft,
   DollarSign,
 } from "lucide-react";
+import { Footer } from "@/components/layout/Footer";
 
 // Import custom components
 import PersonalInfoStep from "@/components/payment/PersonalInfoStep";
@@ -416,11 +415,11 @@ const Payment = () => {
           <Link to="/" className="font-semibold text-xl text-primary flex items-center gap-2">
             <GraduationCap className="h-5 w-5" /> SEVIS Pay Africa
           </Link>
-          <div className="flex items-center gap-4">
-            <Link to="/" className="text-sm font-medium hover:text-primary">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="text-base font-medium hover:text-primary">
               Home
             </Link>
-            <Link to="/pricing" className="text-sm font-medium hover:text-primary">
+            <Link to="/pricing" className="text-base font-medium hover:text-primary">
               Pricing
             </Link>
             <ThemeToggle />
@@ -430,28 +429,24 @@ const Payment = () => {
 
       <main className="flex-grow container mx-auto px-4 py-12 relative z-10">
         <div className="max-w-3xl mx-auto">
-          <div className="mb-6">
-            <Link to="/pricing" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-4">
-              <ArrowLeft className="h-4 w-4 mr-1" /> Back to Pricing
-            </Link>
-            
+          <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
             
             {selectedPlan && (
-              <Card className="mb-8 overflow-hidden">
-                <div className={`bg-gradient-to-r ${formData.visaType === "f1" ? "from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30" : "from-purple-50 to-fuchsia-50 dark:from-purple-950/40 dark:to-fuchsia-950/30"} p-4`}>
-                  <h2 className="text-lg font-semibold mb-1">Selected Plan: {selectedPlan.name}</h2>
-                  <div className="flex flex-wrap gap-3 text-sm">
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="h-4 w-4" />
+              <Card className="mb-10 overflow-hidden shadow-lg">
+                <div className={`bg-gradient-to-r ${formData.visaType === "f1" ? "from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30" : "from-purple-50 to-fuchsia-50 dark:from-purple-950/40 dark:to-fuchsia-950/30"} p-6`}>
+                  <h2 className="text-xl font-semibold mb-2">Selected Plan: {selectedPlan.name}</h2>
+                  <div className="flex flex-wrap gap-4 text-base">
+                    <div className="flex items-center gap-1 font-medium">
+                      <DollarSign className="h-5 w-5" />
                       <span>Total: ${selectedPlan.totalAmount}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <FileText className="h-4 w-4" />
+                    <div className="flex items-center gap-1 font-medium">
+                      <FileText className="h-5 w-5" />
                       <span>SEVIS Fee: ${selectedPlan.sevisFee}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <GraduationCap className="h-4 w-4" />
+                    <div className="flex items-center gap-1 font-medium">
+                      <GraduationCap className="h-5 w-5" />
                       <span>Visa Type: {formData.visaType.toUpperCase()}</span>
                     </div>
                   </div>
@@ -463,13 +458,13 @@ const Payment = () => {
           {/* Progress Indicator */}
           <PaymentStepsProgress steps={steps} currentStep={currentStep} />
           
-          <Card className="shadow-xl border-t-4 border-t-primary animate-fade-in dark:shadow-primary/5 overflow-hidden">
+          <Card className="shadow-xl border-t-4 border-t-primary animate-fade-in dark:shadow-primary/5 overflow-hidden mb-10">
             <div className={`absolute inset-0 bg-gradient-to-r ${steps[currentStep].bgColor} opacity-50 z-0`}></div>
             <CardHeader className="relative z-10">
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-xl">
                 {steps[currentStep].icon} {steps[currentStep].title}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-base">
                 Please fill in the information below to proceed with your SEVIS fee payment.
               </CardDescription>
             </CardHeader>
@@ -519,23 +514,19 @@ const Payment = () => {
             </form>
           </Card>
           
-          <div className="mt-8 text-center text-sm text-muted-foreground">
-            <p>By proceeding with the payment, you agree to our Terms of Service and Privacy Policy.</p>
-            <div className="mt-6 flex justify-center gap-6 animate-fade-in">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-8 grayscale hover:grayscale-0 transition-all" />
-              <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-8 grayscale hover:grayscale-0 transition-all" />
-              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-8 grayscale hover:grayscale-0 transition-all" />
-              <img src="https://flutterwave.com/images/logo/full.svg" alt="Flutterwave" className="h-8 grayscale hover:grayscale-0 transition-all" />
+          <div className="mt-8 text-center text-base font-medium text-muted-foreground bg-secondary/80 p-6 rounded-lg shadow-sm border border-muted">
+            <p className="text-foreground">By proceeding with the payment, you agree to our Terms of Service and Privacy Policy.</p>
+            <div className="mt-6 flex justify-center gap-8 animate-fade-in">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-10 grayscale-0 transition-all" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-10 grayscale-0 transition-all" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-10 grayscale-0 transition-all" />
+              <img src="https://flutterwave.com/images/logo/full.svg" alt="Flutterwave" className="h-10 grayscale-0 transition-all" />
             </div>
           </div>
         </div>
       </main>
       
-      <footer className="border-t py-6 relative z-10 bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} SEVIS Pay Africa. All rights reserved.
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

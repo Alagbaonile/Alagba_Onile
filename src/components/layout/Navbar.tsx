@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Bell, User } from "lucide-react";
+import { Menu, X, Bell, User, GraduationCap } from "lucide-react";
 import { useLatestNews } from "@/hooks/useNewsData";
 import {
   NavigationMenu,
@@ -63,35 +63,36 @@ export function Navbar() {
           {/* Logo */}
           <Link 
             to="/" 
-            className="font-display text-2xl font-bold transition-transform hover:scale-105"
+            className="font-display text-2xl font-bold transition-transform hover:scale-105 flex items-center gap-2"
           >
-            SevPay
+            <GraduationCap className="h-6 w-6" />
+            SEVIS Pay Africa
           </Link>
           
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-4">
             <Link 
               to="/" 
-              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+              className="text-base font-medium hover:text-primary/80 transition-colors px-3 py-2"
             >
               Home
             </Link>
             <button 
               onClick={() => scrollToSection('services')}
-              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+              className="text-base font-medium hover:text-primary/80 transition-colors px-3 py-2"
             >
               Services
             </button>
             <Link 
               to="/blog" 
-              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+              className="text-base font-medium hover:text-primary/80 transition-colors px-3 py-2"
             >
               Blog
             </Link>
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-sm font-medium hover:text-primary/80 transition-colors bg-transparent">
+                  <NavigationMenuTrigger className="text-base font-medium hover:text-primary/80 transition-colors bg-transparent">
                     Company
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
