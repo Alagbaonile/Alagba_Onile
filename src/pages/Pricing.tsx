@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { GraduationCap, Clock, CreditCard, CheckCircle, DollarSign, ChevronRight, AlertCircle } from "lucide-react";
@@ -7,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Footer } from "@/components/layout/Footer";
 
 interface PricingOption {
   id: string;
@@ -151,10 +151,7 @@ const Pricing = () => {
   ];
 
   const handleSelectPlan = (planId: string) => {
-    // Store selected plan in localStorage
     localStorage.setItem("selectedPlan", planId);
-    
-    // Navigate to payment page
     navigate("/payment", { 
       state: { 
         planId,
@@ -164,22 +161,20 @@ const Pricing = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070')] bg-fixed bg-no-repeat bg-cover bg-center bg-opacity-10">
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0"></div>
-      
+    <div className="min-h-screen flex flex-col bg-background">
       <header className="border-b relative z-10">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="font-semibold text-xl text-primary flex items-center gap-2">
             <GraduationCap className="h-5 w-5" /> SEVIS Pay Africa
           </Link>
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-md font-medium hover:text-primary">
+            <Link to="/" className="text-md font-medium text-lg hover:text-primary">
               Home
             </Link>
-            <Link to="/pricing" className="text-md font-medium text-primary">
+            <Link to="/pricing" className="text-md font-medium text-lg text-primary">
               Pricing
             </Link>
-            <Link to="/blog" className="text-md font-medium hover:text-primary">
+            <Link to="/blog" className="text-md font-medium text-lg hover:text-primary">
               Blog
             </Link>
             <ThemeToggle />
@@ -218,7 +213,7 @@ const Pricing = () => {
               </div>
               
               <TabsContent value="f1" className="mt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 animate-fade-in">
                   {f1VisaPricing.map((plan) => (
                     <PricingCard 
                       key={plan.id} 
@@ -230,7 +225,7 @@ const Pricing = () => {
               </TabsContent>
               
               <TabsContent value="j1" className="mt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 animate-fade-in">
                   {j1VisaPricing.map((plan) => (
                     <PricingCard 
                       key={plan.id} 
@@ -292,11 +287,7 @@ const Pricing = () => {
         </div>
       </main>
       
-      <footer className="border-t py-6 relative z-10 bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} SEVIS Pay Africa. All rights reserved.
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

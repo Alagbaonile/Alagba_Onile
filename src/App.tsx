@@ -8,7 +8,9 @@ import Index from "./pages/Index";
 import Payment from "./pages/Payment";
 import Pricing from "./pages/Pricing";
 import Blog from "./pages/Blog";
+import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Footer } from "@/components/layout/Footer";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,7 @@ const App = () => (
             <Route path="/payment" element={<Payment />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
