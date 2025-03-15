@@ -4,19 +4,17 @@ import { Badge } from "@/components/ui/badge";
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-gradient-to-b from-background to-accent/20"> {/* Increased padding */}
-      <div className="container mx-auto px-6 md:px-10"> {/* Increased container padding */}
-        <div className="text-center max-w-3xl mx-auto mb-20"> {/* Increased margin */}
-          <Badge variant="outline" className="mb-6 px-4 py-1.5 rounded-full bg-primary/5 text-base"> {/* Increased size and spacing */}
-            Simple Process
-          </Badge>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8">How It Works</h2> {/* Increased font size and margin */}
-          <p className="text-xl leading-relaxed text-muted-foreground"> {/* Increased font size and line height */}
+    <section id="how-it-works" className="py-20 bg-gradient-to-b from-background to-accent/20">
+      <div className="container mx-auto px-4">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <Badge variant="outline" className="mb-4 px-3 py-1 rounded-full bg-primary/5">Simple Process</Badge>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">How It Works</h2>
+          <p className="text-lg text-muted-foreground">
             Our simple three-step process makes paying your SEVIS fee quick and hassle-free.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10"> {/* Increased gap */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
               step: "01",
@@ -52,23 +50,23 @@ export function HowItWorks() {
               ]
             }
           ].map((item, index) => (
-            <div key={index} className="bg-background border border-border rounded-xl p-10 shadow-sm relative overflow-hidden group hover-lift"> {/* Increased padding */}
-              <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full"></div> {/* Increased size */}
+            <div key={index} className="bg-background border border-border rounded-xl p-8 shadow-sm relative overflow-hidden group hover-lift">
+              <div className="absolute -right-8 -top-8 w-24 h-24 bg-primary/5 rounded-full"></div>
               
-              <div className="mb-8 flex items-center gap-5"> {/* Increased spacing */}
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold"> {/* Increased size and font */}
+              <div className="mb-6 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-xl font-bold">
                   {item.step}
                 </div>
-                <ArrowRight className="w-6 h-6 text-muted-foreground hidden md:block group-last:hidden" /> {/* Increased size */}
+                <ArrowRight className="w-5 h-5 text-muted-foreground hidden md:block group-last:hidden" />
               </div>
               
-              <h3 className="text-2xl font-semibold mb-4">{item.title}</h3> {/* Increased font size and margin */}
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">{item.description}</p> {/* Increased font size, margin, and line height */}
+              <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+              <p className="text-muted-foreground mb-6">{item.description}</p>
               
-              <ul className="space-y-3"> {/* Increased spacing */}
+              <ul className="space-y-2">
                 {item.points.map((point, pidx) => (
-                  <li key={pidx} className="flex items-start gap-3 text-base"> {/* Increased gap and text size */}
-                    <CheckCircle className="w-6 h-6 text-green-500 mt-0.5 shrink-0" /> {/* Increased size */}
+                  <li key={pidx} className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                     <span>{point}</span>
                   </li>
                 ))}

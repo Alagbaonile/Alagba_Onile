@@ -5,17 +5,6 @@
   margin: 0 auto;
 }
 
-/* Improved spacing utilities */
-.section-padding {
-  padding: 5rem 0; /* 80px top and bottom */
-}
-
-.container-wide {
-  max-width: 1280px;
-  width: 90%;
-  margin: 0 auto;
-}
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
