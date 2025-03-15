@@ -39,17 +39,19 @@ const Index = () => {
 
       <main className="flex-grow">
         <HeroSection />
-        <HowItWorks />
-        <div id="services">
+        <div className="py-16 md:py-20 lg:py-24"> {/* Increased spacing */}
+          <HowItWorks />
+        </div>
+        <div id="services" className="py-16 md:py-20 lg:py-24"> {/* Increased spacing */}
           <WhyChooseUs />
         </div>
-        <div id="about">
+        <div id="about" className="py-16 md:py-20 lg:py-24"> {/* Increased spacing */}
           <PaymentSteps />
         </div>
-        <div id="faq">
+        <div id="faq" className="py-16 md:py-20 lg:py-24"> {/* Increased spacing */}
           <FAQ />
         </div>
-        <div id="contact-support">
+        <div id="contact-support" className="py-16 md:py-20 lg:py-24"> {/* Increased spacing */}
           <ContactSupport />
         </div>
       </main>

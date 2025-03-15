@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Bell, User, ChevronDown } from "lucide-react";
+import { Menu, X, Bell, User, ChevronDown, GraduationCap } from "lucide-react";
 import { useLatestNews } from "@/hooks/useNewsData";
 import {
   NavigationMenu,
@@ -60,17 +60,20 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 md:h-20"> {/* Increased height */}
           {/* Logo */}
           <Link 
             to="/" 
-            className="font-display text-2xl font-bold transition-transform hover:scale-105"
+            className="flex items-center gap-2 font-display text-2xl font-bold transition-transform hover:scale-105"
           >
-            VisaPay
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+              <GraduationCap className="h-5 w-5" />
+            </div>
+            <span>SEVIS Pay Africa</span>
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-4">
+          <nav className="hidden lg:flex items-center space-x-6"> {/* Increased spacing */}
             <Link 
               to="/" 
               className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
@@ -88,6 +91,12 @@ export function Navbar() {
               className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
             >
               Blog
+            </Link>
+            <Link
+              to="/pricing"
+              className="text-sm font-medium hover:text-primary/80 transition-colors px-3 py-2"
+            >
+              Pricing
             </Link>
             <NavigationMenu>
               <NavigationMenuList>
@@ -138,7 +147,7 @@ export function Navbar() {
           </nav>
           
           {/* Actions */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-4"> {/* Increased spacing */}
             <div className="hidden md:block w-64">
               <SearchBar articles={newsData?.articles || []} />
             </div>
@@ -151,6 +160,11 @@ export function Navbar() {
               <User className="h-5 w-5" />
               <span className="sr-only">Account</span>
             </Button>
+            <Link to="/payment" className="hidden md:block">
+              <Button variant="default" size="sm">
+                Make Payment
+              </Button>
+            </Link>
             <Button 
               variant="ghost" 
               size="icon"
@@ -191,6 +205,13 @@ export function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Blog
+              </Link>
+              <Link 
+                to="/pricing" 
+                className="block px-3 py-2 rounded-md hover:bg-accent transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Pricing
               </Link>
               <div className="px-3 py-2">
                 <div className="font-medium mb-2">Company</div>
