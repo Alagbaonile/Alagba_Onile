@@ -14,6 +14,7 @@ import {
   FileText,
   Loader2,
   DollarSign,
+  ArrowLeft,
 } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 
@@ -47,7 +48,6 @@ const Payment = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Get selected plan from location state or localStorage
   const locationState = location.state as { planId?: string; visaType?: "f1" | "j1" } | null;
   const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
 
@@ -64,16 +64,14 @@ const Payment = () => {
     address: "",
     passportRequired: false,
     passportNumber: "",
-    amount: 350, // Default amount, will be updated based on selected plan
+    amount: 350,
     paymentMethod: "card"
   });
   
   const [errors, setErrors] = useState<FieldError>({});
   const [fieldValidStatus, setFieldValidStatus] = useState<{[key: string]: boolean}>({});
 
-  // All available pricing plans
   const pricingPlans: PricingPlan[] = [
-    // F1 Visa Plans
     {
       id: "express-f1",
       name: "Express",
@@ -110,7 +108,6 @@ const Payment = () => {
       totalAmount: 360,
       visaType: "f1"
     },
-    // J1 Visa Plans
     {
       id: "express-j1",
       name: "Express",
@@ -150,7 +147,6 @@ const Payment = () => {
   ];
 
   useEffect(() => {
-    // Get selected plan from location state or localStorage
     const planId = locationState?.planId || localStorage.getItem("selectedPlan");
     
     if (planId) {
@@ -158,14 +154,12 @@ const Payment = () => {
       if (plan) {
         setSelectedPlan(plan);
         
-        // Update form data with plan details
         setFormData(prev => ({
           ...prev,
           visaType: plan.visaType,
           amount: plan.totalAmount
         }));
       } else {
-        // If no valid plan found, redirect to pricing page
         toast({
           title: "No plan selected",
           description: "Please select a payment plan to continue",
@@ -174,7 +168,6 @@ const Payment = () => {
         navigate("/pricing");
       }
     } else {
-      // If no plan selected, redirect to pricing page
       navigate("/pricing");
     }
   }, [location, navigate, toast, locationState]);
@@ -210,7 +203,6 @@ const Payment = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -219,7 +211,6 @@ const Payment = () => {
       });
     }
     
-    // Validate field as user types (for immediate feedback)
     const isValid = validateField(name, value, formData);
     setFieldValidStatus(prev => ({ ...prev, [name]: isValid }));
   };
@@ -227,7 +218,6 @@ const Payment = () => {
   const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Clear error when user makes a selection
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -236,11 +226,9 @@ const Payment = () => {
       });
     }
     
-    // Validate field
     const isValid = validateField(name, value, formData);
     setFieldValidStatus(prev => ({ ...prev, [name]: isValid }));
     
-    // For visa type, we need to reset and validate dependent fields
     if (name === "visaType") {
       if (value === "f1") {
         const isSchoolCodeValid = validateField("schoolCode", formData.schoolCode, formData);
@@ -255,11 +243,9 @@ const Payment = () => {
   const handleCheckboxChange = (name: string, checked: boolean) => {
     setFormData(prev => ({ ...prev, [name]: checked }));
     
-    // Validate checkbox
     const isValid = validateField(name, checked, formData);
     setFieldValidStatus(prev => ({ ...prev, [name]: isValid }));
     
-    // Reset passport number validation if not required
     if (name === "passportRequired") {
       if (!checked) {
         setFieldValidStatus(prev => ({ ...prev, passportNumber: true }));
@@ -293,7 +279,6 @@ const Payment = () => {
           description: "Your information has been submitted. Proceeding to payment...",
         });
         
-        // Skip directly to payment gateway simulation after successful email
         simulatePaymentProcess();
       } else {
         throw new Error(result.message);
@@ -306,7 +291,6 @@ const Payment = () => {
         variant: "destructive"
       });
       
-      // Even if email fails, still allow payment
       simulatePaymentProcess();
     } finally {
       setIsSubmitting(false);
@@ -315,7 +299,6 @@ const Payment = () => {
 
   const handleNext = () => {
     if (handleStepValidation()) {
-      // If we're on the last step, submit form data to email service before proceeding to payment
       if (currentStep === steps.length - 1) {
         handleEmailSubmission();
       } else {
@@ -341,14 +324,12 @@ const Payment = () => {
   };
 
   const simulatePaymentProcess = () => {
-    // Simulate API call
     setTimeout(() => {
       toast({
         title: "Payment process initiated",
         description: "Redirecting to payment gateway...",
       });
       
-      // In a real app, here you would redirect to Flutterwave
       console.log("Form submitted:", formData);
     }, 1500);
   };
@@ -359,6 +340,10 @@ const Payment = () => {
     if (handleStepValidation()) {
       handleEmailSubmission();
     }
+  };
+
+  const handleBackToPricing = () => {
+    navigate('/pricing');
   };
 
   const renderCurrentStep = () => {
@@ -430,7 +415,18 @@ const Payment = () => {
       <main className="flex-grow container mx-auto px-4 py-12 relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-indigo-400 text-transparent bg-clip-text">SEVIS Fee Payment</h1>
+              
+              <Button 
+                variant="outline" 
+                onClick={handleBackToPricing}
+                className="flex items-center gap-2 shadow-sm hover:bg-secondary/80 transition-all"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Pricing
+              </Button>
+            </div>
             
             {selectedPlan && (
               <Card className="mb-10 overflow-hidden shadow-lg">
@@ -455,7 +451,6 @@ const Payment = () => {
             )}
           </div>
           
-          {/* Progress Indicator */}
           <PaymentStepsProgress steps={steps} currentStep={currentStep} />
           
           <Card className="shadow-xl border-t-4 border-t-primary animate-fade-in dark:shadow-primary/5 overflow-hidden mb-10">
