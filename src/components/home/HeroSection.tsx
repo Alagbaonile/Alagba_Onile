@@ -12,7 +12,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative py-32 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070')] bg-cover bg-center bg-no-repeat">
+    <section className="relative py-32 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070')] bg-cover bg-center bg-no-repeat w-full">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background/70 dark:from-background/95 dark:via-background/90 dark:to-background/85"></div>
       
@@ -22,7 +22,7 @@ export function HeroSection() {
       <div className="absolute -left-32 top-1/4 w-[500px] h-[500px] bg-violet-500/10 rounded-full blur-3xl"></div>
       <div className="absolute right-0 bottom-0 w-full h-32 bg-gradient-to-t from-background to-transparent"></div>
       
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container mx-auto max-w-[90%] xl:max-w-[1400px] relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7 text-left">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-medium rounded-full bg-gradient-to-r from-blue-500/10 to-violet-500/10 text-blue-600 dark:text-blue-400 animate-fade-in border border-blue-200/50 dark:border-blue-800/50 backdrop-blur-sm">
