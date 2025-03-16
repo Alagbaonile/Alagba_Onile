@@ -25,7 +25,6 @@ const Pricing = () => {
   const location = useLocation();
   const [visaType, setVisaType] = useState<"f1" | "j1">("f1");
 
-  // Reset any stored plan selection when visiting pricing page directly
   useEffect(() => {
     if (location.pathname === '/pricing') {
       localStorage.removeItem("selectedPlan");
@@ -170,9 +169,6 @@ const Pricing = () => {
           <div className="flex items-center gap-6">
             <Link to="/" className="text-md font-medium text-lg hover:text-primary">
               Home
-            </Link>
-            <Link to="/pricing" className="text-md font-medium text-lg text-primary">
-              Pricing
             </Link>
             <Link to="/blog" className="text-md font-medium text-lg hover:text-primary">
               Blog
