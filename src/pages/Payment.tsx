@@ -14,6 +14,7 @@ import {
   FileText,
   Loader2,
   DollarSign,
+  ArrowLeft,
 } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
 
@@ -396,11 +397,9 @@ const Payment = () => {
             <GraduationCap className="h-5 w-5" /> SEVIS Pay Africa
           </Link>
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-base font-medium hover:text-primary">
-              Home
-            </Link>
-            <Link to="/pricing" className="text-base font-medium hover:text-primary">
-              Pricing
+            <Link to="/pricing" className="text-base font-medium hover:text-primary flex items-center gap-1">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Pricing
             </Link>
             <ThemeToggle />
           </div>
