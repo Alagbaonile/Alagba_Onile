@@ -5,12 +5,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Link } from "react-router-dom";
-import { 
-  ChevronRight, 
-  ChevronLeft, 
-  User, 
-  GraduationCap, 
-  Mail, 
+import emailjs from "emailjs-com";
+import { db, firebase } from "@/lib/firebaseConfig"; // Adjust path if needed
+import { collection, addDoc } from "firebase/firestore";
+import Firebase from "firebase/app";
+import "firebase/firestore";
+
+import {
+  ChevronRight,
+  ChevronLeft,
+  User,
+  GraduationCap,
+  Mail,
   FileText,
   Loader2,
   DollarSign,
@@ -337,6 +343,9 @@ const Payment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    const db = Firebase.firestore()
+    const docRef = db.collection("sevis").doc()
+    const docData = {
     if (handleStepValidation()) {
       handleEmailSubmission();
     }
@@ -474,7 +483,7 @@ const Payment = () => {
                   </Button>
                 ) : (
                   <Button 
-                    type="submit" 
+                    type="submit"  // Ensure manual submission handling
                     disabled={isSubmitting}
                     className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 shadow-md hover:shadow-lg transition-all"
                   >
